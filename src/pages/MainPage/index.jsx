@@ -1,97 +1,105 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
 
-import { AuthContext } from '../../contexts/auth';
+import { AuthContext } from "../../contexts/auth";
 
-import Nav from './Nav';
-import Search from './Search';
-import Repositories from './Repositories';
+import Nav from "./Nav";
+import Search from "./Search";
+import Repositories from "./Repositories";
 
-import { getRepositories, createRepository, destroyRepository} from '../../services/api';
+import {
+  getRepositories,
+  createRepository,
+  destroyRepository,
+} from "../../services/api";
 
-import "./styles.css"
+import "./styles.css";
 
 const MainPage = () => {
-    const {user, logout} = useContext(AuthContext);
-    const [repositories, setRepositories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [loadingError, setLoadingError] = useState(false);
+  const { user, logout } = useContext(AuthContext);
+  const [repositories, setRepositories] = useState([
+    {
+      name: "Meu Repositório",
+      url: "https://github.com/usuario/meu-repositorio",
+      userId: "1234567890abcdef",
+      createdAt: "2025-06-30T14:20:00.000Z",
+      updatedAt: "2025-06-30T14:20:00.000Z",
+    },
+  ]);
+  const [loading, setLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
 
-    const loadData = async (query = "") => {
-        try {
-            setLoading(true);
-            const response = await getRepositories(user?.id, query);
-            setRepositories(response.data);
-            setLoading(false);
-        } catch (error) {
-            console.error(error);
-            setLoadingError(true);
-        }
-
+  const loadData = async (query = "") => {
+    try {
+      setLoading(true);
+      const response = await getRepositories(user?.id, query);
+      setRepositories(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoadingError(true);
     }
+  };
 
-    useEffect(() => {
+  /* useEffect(() => {
         (async () => await loadData())();
-    }, [])
+    }, []) */
 
-    const handlelogout = () => {
-        console.log("logout")
-        logout()
+  const handlelogout = () => {
+    console.log("logout");
+    logout();
+  };
+
+  const handleSearch = (query) => {
+    loadData(query);
+  };
+
+  const handleDeleteRepo = async (repository) => {
+    console.log("delete repo", repository);
+    await destroyRepository(user?.id, repository._id);
+    await loadData();
+  };
+
+  const handleNewRepo = async (url) => {
+    console.log("new repo", url);
+    try {
+      await createRepository(user?.id, url);
+      await loadData();
+    } catch (error) {
+      console.error(error);
+      setLoadingError(true);
     }
+  };
 
-    const handleSearch = (query) => {
-        loadData(query)
-    }
-
-    const handleDeleteRepo = async (repository) => {
-        console.log("delete repo", repository)
-        await destroyRepository(user?.id, repository._id)
-        await loadData()
-    }
-
-    const handleNewRepo = async (url) => {
-        console.log("new repo", url)
-        try {
-            await createRepository(user?.id, url);
-            await loadData();
-
-        } catch (error) {
-            console.error(error);
-            setLoadingError(true);
-        }
-    }
-
-    if (loadingError) {
+  /* if (loadingError) {
         return (
             <div className="loading">
                 Erro ao carregar os dados de repositório. <Link to="/login">Voltar</Link>.
             </div>
         )
-    }
-    
-    if (loading) {
+    } */
+
+  /* if (loading) {
         return (
             <div className="loading">
                 Carregando...
             </div>
         )
-    }
+    } */
 
-    return ( 
-        <div id="main">
-            <Nav onLogout={ handlelogout } />
+  return (
+    <div id="main">
+      <Nav onLogout={handlelogout} />
 
-            <Search onSearch={ handleSearch } />
+      <Search onSearch={handleSearch} />
 
-            <Repositories
-                repositories={repositories}
-                onDeleteRepo={ handleDeleteRepo }
-                onNewRepo={handleNewRepo}
-            />
-        </div>
-     );
-}
- 
+      <Repositories
+        repositories={repositories}
+        onDeleteRepo={handleDeleteRepo}
+        onNewRepo={handleNewRepo}
+      />
+    </div>
+  );
+};
+
 export default MainPage;
-
-

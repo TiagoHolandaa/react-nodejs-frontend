@@ -39,9 +39,9 @@ const AppRoutes = () => {
                     <Route exact
                         path="/"
                         element={
-                            <Private>
+                            //<Private>
                                 <MainPage/>
-                            </Private>
+                            //</Private>
                         }
                     />
                 </Routes>

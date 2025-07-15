@@ -23,7 +23,7 @@ export const AuthProvider = ({children}) => {
     }, []);
 
     const login = async (email, password) => {
-        const response = await createSession(email, password);
+         const response = await createSession(email, password);
 
         localStorage.setItem("user", JSON.stringify(response.data.user))
         localStorage.setItem("token", response.data.token)
@@ -44,7 +44,7 @@ export const AuthProvider = ({children}) => {
     return (
     <AuthContext.Provider
         value={{
-            authenticated: !!user,
+            //authenticated: !!user,
             user,
             loading,
             login,

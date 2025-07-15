@@ -13,10 +13,12 @@ const Repositories = ({repositories, onDeleteRepo, onNewRepo}) => {
                         <li className="item" key={repository._id}>
                             <div className="info">
                                 <div className="owner">
-                                    {repository.name.substring(0, repository.name.indexOf("/"))}
+                                    {/* {repository.name.substring(0, repository.name.indexOf("/"))} */}
+                                    tiago
                                 </div>
                                 <div className="name">
-                                    {repository.name.substring(repository.name.indexOf("/") + 1)}
+                                    {/* {repository.name.substring(repository.name.indexOf("/") + 1)} */}
+                                    teste
                                 </div>
                             </div>
                             <button onClick={() => onDeleteRepo(repository)}>Apagar</button>
